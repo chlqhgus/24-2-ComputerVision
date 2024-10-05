@@ -68,13 +68,43 @@ cv::Mat problem_b_rotate_backward(cv::Mat img, double angle){
 	//                         START OF YOUR CODE                               //
 	//////////////////////////////////////////////////////////////////////////////
 
-	int width, height;
-	width = img.cols; height = img.rows;
+    double rad = angle * M_PI / 180; 
+    double cos_rad_backward = cos(-rad);
+    double sin_rad_backward = sin(-rad);
 
-	cv::Point centerPoint = cv::Point(width / 2, height / 2);
+    int height = img.rows;
+    int width = img.cols;
 
-	cv::Mat rotateMatrix = cv::getRotationMatrix2D(centerPoint, -angle, 1.0);
-	cv::warpAffine(img, output, rotateMatrix, img.size());
+    int height_center = height / 2;
+    int width_center = width / 2;
+
+    int output_width = static_cast<int>(abs(width * cos_rad_backward) + abs(height * sin_rad_backward));
+    int output_height = static_cast<int>(abs(width * sin_rad_backward) + abs(height * cos_rad_backward));
+
+    int output_width_center = output_width / 2;
+    int output_height_center = output_height / 2;
+
+    //declare output Image size
+    output = cv::Mat::zeros(cv::Size(output_width, output_height), img.type());
+
+    for (int x = 0; x < output_width; x++) {
+        for (int y = 0; y < output_height; y++) {
+            
+            //backward는 forward와 반대로, 변환된 이미지로부터 original image의 픽셀을 가져와야 함.
+            int output_x_temp = x - output_width_center;
+            int output_y_temp = y - output_height_center;
+
+            double before_x = cos_rad_backward * output_x_temp - sin_rad_backward * output_y_temp + width_center;
+            double before_y = sin_rad_backward * output_x_temp + cos_rad_backward * output_y_temp + height_center;
+
+            int img_x = round(before_x);
+            int img_y = round(before_y);
+
+            if (img_x >= 0 && img_x < width && img_y >= 0 && img_y < height) {
+                output.at<cv::Vec3b>(y, x) = img.at<cv::Vec3b>(img_y,img_x);
+            }
+        }
+    }
 
 	//////////////////////////////////////////////////////////////////////////////
 	//                          END OF YOUR CODE                                //
@@ -139,9 +169,9 @@ int main(void){
 	cv::Mat input = cv::imread("lena.jpg");
 	cv::imshow("a_output", input);
 	//Fill problem_a_rotate_forward and show output
-	problem_a_rotate_forward(input, angle);
+	//problem_a_rotate_forward(input, angle);
 	//Fill problem_b_rotate_backward and show output
-	//problem_b_rotate_backward(input, angle);
+	problem_b_rotate_backward(input, angle);
 	//Fill problem_c_rotate_backward_interarea and show output
 	//problem_c_rotate_backward_interarea(input, angle);
 	//Example how to access pixel value, change params if you want

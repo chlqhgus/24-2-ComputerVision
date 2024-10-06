@@ -156,24 +156,30 @@ cv::Mat problem_c_rotate_backward_interarea(cv::Mat img, double angle){
             int y1 = floor(before_y);
             int y2 = ceil(before_y);
 
-            //if (x1 < 0 || x2 >= img.cols || y1 < 0 || y2 >= img.rows) continue; //범위가 input image의 크기보다 크다면 continue
-
-            //cv::Vec3b p1 = img.at<cv::Vec3b>(y1, x1);
-            //cv::Vec3b p2 = img.at<cv::Vec3b>(y1, x2);
-            //cv::Vec3b p3 = img.at<cv::Vec3b>(y2, x1);
-            //cv::Vec3b p4 = img.at<cv::Vec3b>(y2, x2);
-
-            //double a = before_x - x1;
-            //double b = before_y - y1;
-
-            //cv::Vec3b interpolatedPixel = p1 * (1 - a) * (1 - b) + p2 * a * (1 - b) + p3 * (1 - a) * b + p4 * a * b;
-            //output.at<cv::Vec3b>(y, x) = interpolatedPixel;
-
+            if (x1 < 0 || x2 >= img.cols || y1 < 0 || y2 >= img.rows) continue;
             cv::Vec3b pixel_x1y1 = img.at<cv::Vec3b>(y1,x1);
             cv::Vec3b pixel_x1y2 = img.at<cv::Vec3b>(y2,x1);
             cv::Vec3b pixel_x2y1 = img.at<cv::Vec3b>(y1,x2);
-            cv::Vec3b pixel_x2y2 = img.at<cv::Vec3b>(y2, x2);
+            cv::Vec3b pixel_x2y2 = img.at<cv::Vec3b>(y2, x2);           
+            double d1 = before_x - x1;
+            double d2 = x2 - before_x; //d2 = 1-d1
+            double d3 = y2 - before_y; //d3 = 1-d4
+            double d4 = before_y - y1;
+           
+            /*
+            
+            Bilinear Interpolation의 수식적 의미를 사용해서 아래 코드로 구현해보았으나 특정 지점에서 hole이 발생함.
+            이는 아마 d1,d2,d3,d4를 각각 구하는 방법에서 오차가 발생했기 때문이라고 판단하였음.
+            정수에서 실수를 빼는 것이기 때문에 오차가 발생했던 것.
 
+            이를 해결하기 위해서는 d2,d3를 모두 구하는 것이 아닌, (1-d1)과 같이 표현해야 오차가 최소화될 것임
+
+            */
+            //cv::Vec3b pixel_final = (d1 * d3 * pixel_x2y1 + d2 * d3 * pixel_x1y1 + d1 * d4 * pixel_x2y2 + d2 * d4 * pixel_x1y2)/((d1+d2)*(d3+d4));
+
+            cv::Vec3b pixel_final = (d1 * (1-d4) * pixel_x2y1 + (1-d1) * (1-d4) * pixel_x1y1 + d1 * d4 * pixel_x2y2 + (1-d1) * d4 * pixel_x1y2); //d2=1-d1, d3=1-d4 대입
+            output.at<cv::Vec3b>(y, x) = pixel_final;
+ 
         }
     }
 
@@ -225,11 +231,11 @@ int main(void){
 	cv::Mat input = cv::imread("lena.jpg");
 	cv::imshow("a_output", input);
 	//Fill problem_a_rotate_forward and show output
-	//problem_a_rotate_forward(input, angle);
+	problem_a_rotate_forward(input, angle);
 	//Fill problem_b_rotate_backward and show output
-	//problem_b_rotate_backward(input, angle);
+	problem_b_rotate_backward(input, angle);
 	//Fill problem_c_rotate_backward_interarea and show output
 	problem_c_rotate_backward_interarea(input, angle);
 	//Example how to access pixel value, change params if you want
-	//Example_change_brightness(input, 100, 50, 125);
+	Example_change_brightness(input, 100, 50, 125);
 }

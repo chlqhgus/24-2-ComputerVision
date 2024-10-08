@@ -11,11 +11,11 @@ cv::Mat problem_a_rotate_forward(cv::Mat img, double angle){
 	//                         START OF YOUR CODE                               //
 	//////////////////////////////////////////////////////////////////////////////
 
-    double rad = angle * M_PI /180; // °¢µµ¸¦ radianÀ¸·Î º¯È¯ÇÏ±â À§ÇÑ °ø½Ä
+    double rad = angle * M_PI /180; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ radianï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     double cos_rad = cos(rad);
     double sin_rad = sin(rad);
 
-    // cordinate rotation ½Ã center point¸¦ °è»êÇÏ±â À§ÇØ º¯È¯ÇÏ±â Àü image size¸¦ °è»êÇØ¾ß ÇÑ´Ù.
+    // cordinate rotation ï¿½ï¿½ center pointï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ï¿½Ï±ï¿½ ï¿½ï¿½ image sizeï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ ï¿½Ñ´ï¿½.
     // check image size to calculate center point
     int height = img.rows; 
     int width = img.cols;
@@ -23,7 +23,7 @@ cv::Mat problem_a_rotate_forward(cv::Mat img, double angle){
     int height_center = height / 2;
     int width_center = width / 2;
 
-    //rotation ÀÌÈÄ imageÀÇ size°¡ º¯È­ÇÒ ¼ö ÀÖ±â ¶§¹®¿¡ size¸¦ °è»êÇØÁÖ¾î¾ß ÇÑ´Ù.
+    //rotation ï¿½ï¿½ï¿½ï¿½ imageï¿½ï¿½ sizeï¿½ï¿½ ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ sizeï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¾ï¿½ï¿½ ï¿½Ñ´ï¿½.
     //Since image size can be changed after rotation, we need to calculate rotationed image size
     int output_width = static_cast<int>(abs(width * cos_rad) + abs(height * sin_rad)); 
     int output_height = static_cast<int>(abs(width * sin_rad) + abs(height * cos_rad)); //pixel location have to be (int,int), so use abs
@@ -37,15 +37,15 @@ cv::Mat problem_a_rotate_forward(cv::Mat img, double angle){
     for (int x = 0; x < width; x++) {
         for (int y = 0; y < height; y++) {
             
-            //Áß½ÉÁ¡À» ±âÁØÀ¸·Î rotate µÇ¹Ç·Î, ÇöÀç À§Ä¡¿¡¼­ Áß½ÉÁ¡ÀÇ °ªÀ» »©ÁÖ¾î¾ß ÇÑ´Ù.
+            //ï¿½ß½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ rotate ï¿½Ç¹Ç·ï¿½, ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ï¿½ï¿½ ï¿½ß½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ö¾ï¿½ï¿½ ï¿½Ñ´ï¿½.
             int x_temp = x - width_center; 
             int y_temp = y - height_center;
 
             double rotate_x = cos_rad * x_temp - sin_rad * y_temp + output_width_center;
             double rotate_y = sin_rad*x_temp + cos_rad*y_temp+ output_height_center;
 
-            int output_x = round(rotate_x);
-            int output_y = round(rotate_y);
+            int output_x = static_cast<int>(round(rotate_x));
+            int output_y = static_cast<int>(round(rotate_y));
 
             if (output_x >= 0 && output_x < output_width && output_y >= 0 && output_y < output_height) {
                 output.at<cv::Vec3b>(output_y, output_x) = img.at<cv::Vec3b>(y, x);
@@ -90,15 +90,15 @@ cv::Mat problem_b_rotate_backward(cv::Mat img, double angle){
     for (int x = 0; x < output_width; x++) {
         for (int y = 0; y < output_height; y++) {
             
-            //backward´Â forward¿Í ¹Ý´ë·Î, º¯È¯µÈ ÀÌ¹ÌÁö·ÎºÎÅÍ original imageÀÇ ÇÈ¼¿À» °¡Á®¿Í¾ß ÇÔ.
+            //backwardï¿½ï¿½ forwardï¿½ï¿½ ï¿½Ý´ï¿½ï¿½, ï¿½ï¿½È¯ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ï¿½Îºï¿½ï¿½ï¿½ original imageï¿½ï¿½ ï¿½È¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¾ï¿½ ï¿½ï¿½.
             int output_x_temp = x - output_width_center;
             int output_y_temp = y - output_height_center;
 
             double before_x = cos_rad_backward * output_x_temp - sin_rad_backward * output_y_temp + width_center;
             double before_y = sin_rad_backward * output_x_temp + cos_rad_backward * output_y_temp + height_center;
 
-            int img_x = round(before_x);
-            int img_y = round(before_y);
+            int img_x = static_cast<int>(round(before_x));
+            int img_y = static_cast<int>(round(before_y));
 
             if (img_x >= 0 && img_x < width && img_y >= 0 && img_y < height) {
                 output.at<cv::Vec3b>(y, x) = img.at<cv::Vec3b>(img_y,img_x);
@@ -144,17 +144,17 @@ cv::Mat problem_c_rotate_backward_interarea(cv::Mat img, double angle){
     for (int x = 0; x < output_width; x++) {
         for (int y = 0; y < output_height; y++) {
 
-            //backward´Â forward¿Í ¹Ý´ë·Î, º¯È¯µÈ ÀÌ¹ÌÁö·ÎºÎÅÍ original imageÀÇ ÇÈ¼¿À» °¡Á®¿Í¾ß ÇÔ.
+            //backwardï¿½ï¿½ forwardï¿½ï¿½ ï¿½Ý´ï¿½ï¿½, ï¿½ï¿½È¯ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ï¿½Îºï¿½ï¿½ï¿½ original imageï¿½ï¿½ ï¿½È¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¾ï¿½ ï¿½ï¿½.
             int output_x_temp = x - output_width_center;
             int output_y_temp = y - output_height_center;
 
             double before_x = cos_rad_backward * output_x_temp - sin_rad_backward * output_y_temp + width_center;
             double before_y = sin_rad_backward * output_x_temp + cos_rad_backward * output_y_temp + height_center;
 
-            int x1 = floor(before_x);
-            int x2 = ceil(before_x);
-            int y1 = floor(before_y);
-            int y2 = ceil(before_y);
+            int x1 = static_cast<int>(floor(before_x));
+            int x2 = static_cast<int>(ceil(before_x));
+            int y1 = static_cast<int>(floor(before_y));
+            int y2 = static_cast<int>(ceil(before_y));
 
             if (x1 < 0 || x2 >= img.cols || y1 < 0 || y2 >= img.rows) continue;
             cv::Vec3b pixel_x1y1 = img.at<cv::Vec3b>(y1,x1);
@@ -168,16 +168,16 @@ cv::Mat problem_c_rotate_backward_interarea(cv::Mat img, double angle){
            
             /*
             
-            Bilinear InterpolationÀÇ ¼ö½ÄÀû ÀÇ¹Ì¸¦ »ç¿ëÇØ¼­ ¾Æ·¡ ÄÚµå·Î ±¸ÇöÇØº¸¾ÒÀ¸³ª Æ¯Á¤ ÁöÁ¡¿¡¼­ holeÀÌ ¹ß»ýÇÔ.
-            ÀÌ´Â ¾Æ¸¶ d1,d2,d3,d4¸¦ °¢°¢ ±¸ÇÏ´Â ¹æ¹ý¿¡¼­ ¿ÀÂ÷°¡ ¹ß»ýÇß±â ¶§¹®ÀÌ¶ó°í ÆÇ´ÜÇÏ¿´À½.
-            Á¤¼ö¿¡¼­ ½Ç¼ö¸¦ »©´Â °ÍÀÌ±â ¶§¹®¿¡ ¿ÀÂ÷°¡ ¹ß»ýÇß´ø °Í.
+            Bilinear Interpolationï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ç¹Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½Æ·ï¿½ ï¿½Úµï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Øºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Æ¯ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ holeï¿½ï¿½ ï¿½ß»ï¿½ï¿½ï¿½.
+            ï¿½Ì´ï¿½ ï¿½Æ¸ï¿½ d1,d2,d3,d4ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½ï¿½ß±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì¶ï¿½ï¿½ ï¿½Ç´ï¿½ï¿½Ï¿ï¿½ï¿½ï¿½.
+            ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ç¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½ï¿½ß´ï¿½ ï¿½ï¿½.
 
-            ÀÌ¸¦ ÇØ°áÇÏ±â À§ÇØ¼­´Â d2,d3¸¦ ¸ðµÎ ±¸ÇÏ´Â °ÍÀÌ ¾Æ´Ñ, (1-d1)°ú °°ÀÌ Ç¥ÇöÇØ¾ß ¿ÀÂ÷°¡ ÃÖ¼ÒÈ­µÉ °ÍÀÓ
+            ï¿½Ì¸ï¿½ ï¿½Ø°ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½Ø¼ï¿½ï¿½ï¿½ d2,d3ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Æ´ï¿½, (1-d1)ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½ï¿½Ø¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¼ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
             */
             //cv::Vec3b pixel_final = (d1 * d3 * pixel_x2y1 + d2 * d3 * pixel_x1y1 + d1 * d4 * pixel_x2y2 + d2 * d4 * pixel_x1y2)/((d1+d2)*(d3+d4));
 
-            cv::Vec3b pixel_final = (d1 * (1-d4) * pixel_x2y1 + (1-d1) * (1-d4) * pixel_x1y1 + d1 * d4 * pixel_x2y2 + (1-d1) * d4 * pixel_x1y2); //d2=1-d1, d3=1-d4 ´ëÀÔ
+            cv::Vec3b pixel_final = (d1 * (1-d4) * pixel_x2y1 + (1-d1) * (1-d4) * pixel_x1y1 + d1 * d4 * pixel_x2y2 + (1-d1) * d4 * pixel_x1y2); //d2=1-d1, d3=1-d4 ï¿½ï¿½ï¿½ï¿½
             output.at<cv::Vec3b>(y, x) = pixel_final;
  
         }
